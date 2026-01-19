@@ -739,19 +739,19 @@ textarea { height: 100px; resize: vertical; }
                 
                 <div style="margin-top:20px;">
                     <label style="color:var(--primary);font-size:0.9em;">ALLES (Tegels + Tabel)</label>
-                    <div class="embed-code">&lt;iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed" width="100%" height="1600" frameborder="0"&gt;&lt;/iframe&gt;</div>
+                    <div class="embed-code">&lt;iframe src="https://if-funnel-en-tabel-generator-v2.vercel.app/embed" width="100%" height="1600" frameborder="0"&gt;&lt;/iframe&gt;</div>
                     <button class="btn btn-primary" onclick="copyCode('all')" style="margin-bottom:20px;">📋 Kopieer</button>
                 </div>
                 
                 <div>
                     <label style="color:var(--primary);font-size:0.9em;">ALLEEN TEGELS</label>
-                    <div class="embed-code">&lt;iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed/tiles" width="100%" height="800" frameborder="0"&gt;&lt;/iframe&gt;</div>
+                    <div class="embed-code">&lt;iframe src="https://if-funnel-en-tabel-generator-v2.vercel.app/embed/tiles" width="100%" height="800" frameborder="0"&gt;&lt;/iframe&gt;</div>
                     <button class="btn btn-primary" onclick="copyCode('tiles')" style="margin-bottom:20px;">📋 Kopieer</button>
                 </div>
                 
                 <div>
                     <label style="color:var(--primary);font-size:0.9em;">ALLEEN TABEL</label>
-                    <div class="embed-code">&lt;iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed/table" width="100%" height="800" frameborder="0"&gt;&lt;/iframe&gt;</div>
+                    <div class="embed-code">&lt;iframe src="https://if-funnel-en-tabel-generator-v2.vercel.app/embed/table" width="100%" height="800" frameborder="0"&gt;&lt;/iframe&gt;</div>
                     <button class="btn btn-primary" onclick="copyCode('table')">📋 Kopieer</button>
                 </div>
             </div>
@@ -1253,9 +1253,9 @@ function dragEnd() {
 ======================================== */
 function copyCode(type) {
     const codes = {
-        all: '<iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed" width="100%" height="1600" frameborder="0"></iframe>',
-        tiles: '<iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed/tiles" width="100%" height="800" frameborder="0"></iframe>',
-        table: '<iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed/table" width="100%" height="800" frameborder="0"></iframe>'
+        all: '<iframe src="https://if-funnel-en-tabel-generator-v2.vercel.app/embed" width="100%" height="1600" frameborder="0"></iframe>',
+        tiles: '<iframe src="https://if-funnel-en-tabel-generator-v2.vercel.app/embed/tiles" width="100%" height="800" frameborder="0"></iframe>',
+        table: '<iframe src="https://if-funnel-en-tabel-generator-v2.vercel.app/embed/table" width="100%" height="800" frameborder="0"></iframe>'
     };
     navigator.clipboard.writeText(codes[type]);
     showToast('📋 Embed code gekopieerd');
