@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infofrankrijk - Tabel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary: #800000;
+    --primary-light: rgba(128,0,0,0.1);
+    --primary-hover: #600000;
+    --text: #333;
+    --text-light: #555;
+    --success: #27ae60;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Mulish', sans-serif;
+    color: var(--text);
+    line-height: 1.8;
+    background: transparent;
+}
+
+h1, h2, h3, .if-btn, th { font-family: 'Poppins', sans-serif; }
+
+.if-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Table */
+.if-tbl-container {
+    overflow-x: auto;
+}
+
+.if-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    border: 1px solid #eee;
+    font-size: 15px;
+}
+
+.if-tbl th {
+    background: white;
+    color: var(--primary);
+    padding: 12px 10px;
+    text-align: center;
+    border-bottom: 3px solid var(--primary);
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.if-tbl th.tl { text-align: left; }
+
+.if-tbl td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+/* Accordion headers */
+.if-th-accordion {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 15px 10px !important;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.if-th-accordion:hover {
+    background: rgba(128,0,0,0.15);
+}
+
+.if-th-accordion td {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.if-accordion-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    background: var(--primary);
+    color: white;
+    border-radius: 3px;
+    font-size: 14px;
+    transition: transform 0.3s;
+}
+
+.if-th-accordion.open .if-accordion-icon {
+    transform: rotate(90deg);
+}
+
+.if-section-items {
+    display: none;
+}
+
+.if-section-items.open {
+    display: table-row-group;
+}
+
+.if-icon { text-align: center; font-size: 18px; }
+.bg-sub { background-color: #fffbfc; }
+.c-yes { color: var(--success); font-weight: bold; }
+.c-no { color: #ccc; }
+
+.if-link-icon svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--primary);
+    margin-left: 5px;
+    opacity: 0.6;
+    vertical-align: middle;
+}
+
+/* Teaser rows */
+.if-row-teaser {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.if-row-teaser:hover {
+    background: #fff5f5 !important;
+}
+
+.if-row-teaser td:first-child {
+    position: relative;
+    padding-left: 28px;
+}
+
+.if-row-teaser td:first-child::before {
+    content: "▶";
+    position: absolute;
+    left: 10px;
+    color: var(--primary);
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+/* Cost row */
+.if-cost-row td {
+    font-weight: bold;
+    color: var(--primary);
+}
+
+/* CTA */
+.if-cta {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.if-btn {
+    display: inline-block;
+    padding: 15px 40px;
+    background: var(--primary);
+    color: white !important;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.if-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+/* Modal */
+.if-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.if-modal-overlay.active {
+    display: flex;
+}
+
+.if-modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.if-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    color: #666;
+    z-index: 10;
+    transition: 0.2s;
+}
+
+.if-modal-close:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.if-modal-header {
+    background: linear-gradient(135deg, #800000 0%, #a00000 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.if-modal-header h3 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.if-modal-body {
+    padding: 30px;
+}
+
+.if-modal-teaser {
+    font-size: 1.1em;
+    color: var(--text-light);
+    line-height: 1.8;
+    margin-bottom: 25px;
+    white-space: pre-line;
+}
+
+.if-modal-video {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    background: #000;
+}
+
+.if-modal-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.if-modal-cta {
+    text-align: center;
+    padding: 20px;
+    background: var(--primary-light);
+    border-radius: 8px;
+}
+
+.if-modal-cta p {
+    margin: 0 0 15px 0;
+    color: #666;
+    font-size: 0.95em;
+}
+
+/* Loading */
+.if-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+}
+
+.if-loading::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 20px auto;
+    border: 3px solid #eee;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<div class="if-container">
+    <div id="content" class="if-loading">Laden...</div>
+</div>
+
+<!-- Modal -->
+<div class="if-modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="if-modal" onclick="event.stopPropagation()">
+        <button class="if-modal-close" onclick="closeModal()">&times;</button>
+        <div class="if-modal-header">
+            <h3 id="modalTitle">Titel</h3>
+        </div>
+        <div class="if-modal-body">
+            <p class="if-modal-teaser" id="modalTeaser"></p>
+            <div class="if-modal-video" id="modalVideo" style="display:none;">
+                <iframe id="modalIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="if-modal-cta">
+                <p>Dit instrument is beschikbaar voor Infofrankrijk abonnees.</p>
+                <a href="https://infofrankrijk.com/abonnement/" class="if-btn" target="_blank">Word abonnee</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let teaserData = {};
+
+async function loadData() {
+    let appData = { table: [] };
+    
+    try {
+        const res = await fetch('/api/data?action=embed');
+        if (res.ok) {
+            appData = await res.json();
+        }
+    } catch (e) {
+        console.error('Failed to load data:', e);
+    }
+    
+    render(appData);
+}
+
+function getYoutubeId(url) {
+    if (!url) return null;
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\?\/]+)/);
+    return match ? match[1] : null;
+}
+
+function render(appData) {
+    const container = document.getElementById('content');
+    container.className = '';
+    
+    if (!appData.table || appData.table.length === 0) {
+        container.innerHTML = '<p style="color:#666;text-align:center;">Geen tabeldata beschikbaar.</p>';
+        return;
+    }
+    
+    let html = `
+        <div class="if-tbl-container">
+            <table class="if-tbl">
+                <thead>
+                    <tr>
+                        <th class="tl">Dienst / Instrument</th>
+                        <th style="width:100px;">Bezoekers</th>
+                        <th style="width:100px;">Abonnees</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    // Group items by headers
+    let sections = [];
+    let currentSection = null;
+    
+    appData.table.forEach((row, idx) => {
+        if (row.type === 'header') {
+            if (currentSection) sections.push(currentSection);
+            currentSection = { header: row.name, items: [], id: 'section-' + idx };
+        } else if (currentSection) {
+            currentSection.items.push({ ...row, idx });
+        }
+    });
+    if (currentSection) sections.push(currentSection);
+    
+    // Render sections with accordions
+    sections.forEach((section, sIdx) => {
+        html += `
+            <tr class="if-th-accordion open" onclick="toggleSection('${section.id}')" id="header-${section.id}">
+                <td colspan="3">
+                    <span class="if-accordion-icon">▶</span>
+                    ${section.header}
+                </td>
+            </tr>
+        `;
+        
+        html += `<tbody class="if-section-items open" id="${section.id}">`;
+        
+        section.items.forEach(item => {
+            const isSubOnly = item.sub && !item.vis;
+            const hasTeaser = isSubOnly && (item.teaser || item.youtube);
+            
+            if (hasTeaser) {
+                const teaserId = 'teaser-' + item.idx;
+                teaserData[teaserId] = {
+                    name: item.name,
+                    teaser: item.teaser || '',
+                    youtubeId: getYoutubeId(item.youtube)
+                };
+                
+                html += `
+                    <tr class="if-row-teaser" onclick="openModal('${teaserId}')">
+                        <td>${item.name}</td>
+                        <td class="if-icon"><span class="c-no">✘</span></td>
+                        <td class="if-icon bg-sub"><span class="c-yes">✔</span></td>
+                    </tr>
+                `;
+            } else {
+                const linkHtml = item.link ? `<a href="${item.link}" target="_blank" class="if-link-icon"><svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2v-7h-2v7z"/></svg></a>` : '';
+                
+                html += `
+                    <tr>
+                        <td>${item.name}${linkHtml}</td>
+                        <td class="if-icon">${item.vis ? '<span class="c-yes">✔</span>' : '<span class="c-no">✘</span>'}</td>
+                        <td class="if-icon bg-sub">${item.sub ? '<span class="c-yes">✔</span>' : '<span class="c-no">✘</span>'}</td>
+                    </tr>
+                `;
+            }
+        });
+        
+        html += `</tbody>`;
+    });
+    
+    // Cost row
+    html += `
+            <tr class="if-cost-row">
+                <td>KOSTEN</td>
+                <td style="text-align:center;font-weight:normal;">Gratis</td>
+                <td style="text-align:center;background:#fffbfc;">€49 / jaar</td>
+            </tr>
+        </tbody>
+        </table>
+        </div>
+        
+        <div class="if-cta">
+            <a href="https://infofrankrijk.com/abonnement/" class="if-btn">Word abonnee, meld je aan</a>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+function toggleSection(id) {
+    const section = document.getElementById(id);
+    const header = document.getElementById('header-' + id);
+    
+    section.classList.toggle('open');
+    header.classList.toggle('open');
+}
+
+function openModal(id) {
+    const item = teaserData[id];
+    if (!item) return;
+    
+    document.getElementById('modalTitle').textContent = item.name;
+    document.getElementById('modalTeaser').textContent = item.teaser;
+    
+    const videoContainer = document.getElementById('modalVideo');
+    const iframe = document.getElementById('modalIframe');
+    
+    if (item.youtubeId) {
+        iframe.src = 'https://www.youtube.com/embed/' + item.youtubeId + '?rel=0';
+        videoContainer.style.display = 'block';
+    } else {
+        iframe.src = '';
+        videoContainer.style.display = 'none';
+    }
+    
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+    if (e && e.target !== e.currentTarget) return;
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.getElementById('modalIframe').src = '';
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+});
+
+loadData();
+</script>
+</body>
+</html>

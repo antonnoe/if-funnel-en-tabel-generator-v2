@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infofrankrijk - Tegels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary: #800000;
+    --primary-light: rgba(128,0,0,0.1);
+    --primary-hover: #600000;
+    --text: #333;
+    --text-light: #555;
+    --success: #27ae60;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Mulish', sans-serif;
+    color: var(--text);
+    line-height: 1.8;
+    background: transparent;
+}
+
+h1, h2, h3, .if-btn { font-family: 'Poppins', sans-serif; }
+
+.if-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Tile Grid */
+.if-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 900px) { .if-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .if-grid { grid-template-columns: 1fr; } }
+
+.if-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    height: 550px;
+}
+
+.if-card-img {
+    height: 160px;
+    background-size: cover;
+    background-position: top center;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+}
+
+.if-card-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--primary-light);
+    overflow: hidden;
+}
+
+.if-card-content h3 {
+    color: var(--primary);
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.if-text-scroll {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    color: var(--text-light);
+}
+
+.if-text-scroll::-webkit-scrollbar { width: 4px; }
+.if-text-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+.if-text-scroll::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
+
+.if-card-actions {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 15px;
+}
+
+.if-btn-mini {
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 3px;
+    transition: 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.if-btn-red { background: var(--primary); color: white !important; }
+.if-btn-red:hover { background: var(--primary-hover); }
+.if-btn-link { color: #666 !important; background: none; }
+.if-btn-link:hover { text-decoration: underline; color: #333 !important; }
+
+/* Loading */
+.if-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+}
+
+.if-loading::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 20px auto;
+    border: 3px solid #eee;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<div class="if-container">
+    <div id="content" class="if-loading">Laden...</div>
+</div>
+
+<script>
+async function loadData() {
+    let appData = { tiles: [] };
+    
+    try {
+        const res = await fetch('/api/data?action=embed');
+        if (res.ok) {
+            appData = await res.json();
+        }
+    } catch (e) {
+        console.error('Failed to load data:', e);
+    }
+    
+    render(appData);
+}
+
+function render(appData) {
+    const container = document.getElementById('content');
+    container.className = '';
+    
+    if (!appData.tiles || appData.tiles.length === 0) {
+        container.innerHTML = '<p style="color:#666;text-align:center;">Geen tegels beschikbaar.</p>';
+        return;
+    }
+    
+    let html = '<div class="if-grid">';
+    
+    appData.tiles.forEach(tile => {
+        const textHtml = (tile.text || '').replace(/\n/g, '<br>');
+        html += `
+            <div class="if-card">
+                <div class="if-card-img" style="background-image:url('${tile.img || ''}')"></div>
+                <div class="if-card-content">
+                    <h3>${tile.title || ''}</h3>
+                    <div class="if-text-scroll">${textHtml}</div>
+                    <div class="if-card-actions">
+                        <a href="https://infofrankrijk.com/abonnement/" class="if-btn-mini if-btn-red" target="_blank">Word abonnee</a>
+                        <a href="https://infofrankrijk.com/aanmelden/" class="if-btn-mini if-btn-link" target="_blank">Log in</a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+loadData();
+</script>
+</body>
+</html>

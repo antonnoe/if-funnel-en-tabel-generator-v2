@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/embed/tiles", "dest": "/embed-tiles.html" },
+    { "src": "/embed/table", "dest": "/embed-table.html" },
+    { "src": "/embed", "dest": "/embed.html" },
+    { "src": "/admin", "dest": "/index.html" },
+    { "src": "/", "dest": "/index.html" }
+  ],
+  "env": {
+    "ADMIN_PASSWORD": "@admin-password"
+  }
+}

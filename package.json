@@ -1,0 +1,11 @@
+{
+  "name": "if-funnel-manager",
+  "version": "2.0.0",
+  "description": "Infofrankrijk Funnel & Tabel Manager",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  }
+}

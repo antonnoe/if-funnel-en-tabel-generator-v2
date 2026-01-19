@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infofrankrijk Funnel Manager - Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary: #800000;
+    --primary-light: rgba(128,0,0,0.1);
+    --primary-hover: #600000;
+    --text: #333;
+    --text-light: #555;
+    --bg: #f4f6f8;
+    --white: #fff;
+    --border: #ddd;
+    --success: #27ae60;
+    --warning: #f39c12;
+    --danger: #c53030;
+}
+
+* { box-sizing: border-box; }
+
+body { 
+    font-family: 'Mulish', sans-serif; 
+    background: var(--bg); 
+    margin: 0; 
+    padding: 0; 
+    color: var(--text); 
+    line-height: 1.8; 
+}
+
+h1, h2, h3, .tab, label, th, .tile-title, .step-title, .btn { 
+    font-family: 'Poppins', sans-serif; 
+}
+
+/* Login Screen */
+.login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-box {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.login-box h1 {
+    color: var(--primary);
+    margin: 0 0 10px 0;
+    font-size: 1.5em;
+}
+
+.login-box p {
+    color: var(--text-light);
+    margin: 0 0 30px 0;
+}
+
+.login-box input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-size: 1em;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.login-box input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.login-error {
+    color: var(--danger);
+    margin-bottom: 15px;
+    display: none;
+}
+
+/* Main App */
+.app-container { display: none; }
+.app-container.active { display: block; }
+
+.container { 
+    max-width: 1280px; 
+    margin: 0 auto; 
+    background: var(--white); 
+    border-radius: 8px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    overflow: hidden; 
+    min-height: 80vh; 
+}
+
+header { 
+    background: var(--primary); 
+    color: var(--white); 
+    padding: 20px 30px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+header h1 { margin: 0; font-size: 1.4em; }
+
+.header-right { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+.version { 
+    font-size: 0.8em; 
+    opacity: 0.8; 
+    background: rgba(255,255,255,0.2); 
+    padding: 2px 8px; 
+    border-radius: 4px; 
+}
+
+.btn-logout {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.btn-logout:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Status bar */
+.status-bar {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.95em;
+    flex-wrap: wrap;
+}
+
+.status-bar.saving {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-bar.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.last-saved {
+    font-weight: normal;
+    font-size: 0.85em;
+    opacity: 0.8;
+}
+
+/* Tabs */
+.tabs { 
+    display: flex; 
+    background: #eee; 
+    border-bottom: 1px solid var(--border); 
+    flex-wrap: wrap; 
+}
+
+.tab { 
+    padding: 15px 20px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    border: none; 
+    background: none; 
+    color: var(--text-light); 
+    outline: none; 
+    transition: 0.2s; 
+    border-right: 1px solid var(--border);
+    line-height: 1.4;
+}
+
+.tab.active { 
+    background: var(--white); 
+    color: var(--primary); 
+    border-top: 4px solid var(--primary); 
+}
+
+.tab:hover:not(.active) { background: #e0e0e0; }
+
+.tab-content { 
+    padding: 30px; 
+    display: none; 
+}
+
+.tab-content.active { display: block; }
+
+/* Buttons */
+.btn { 
+    padding: 12px 20px; 
+    border: none; 
+    border-radius: 4px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: 0.2s; 
+    font-size: 1em; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px; 
+    text-decoration: none; 
+    color: var(--white); 
+    line-height: 1.4;
+}
+
+.btn-primary { background: var(--primary); }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.btn-success { background: var(--success); }
+.btn-success:hover { background: #219a52; }
+.btn-secondary { background: #6c757d; }
+.btn-danger { background: #fee2e2; color: var(--danger); }
+.btn-danger:hover { background: #fecaca; }
+.btn-update { background: #2980b9; display: none; }
+
+.btn-icon { 
+    padding: 6px 10px; 
+    font-size: 0.9em; 
+    cursor: pointer; 
+    border-radius: 4px; 
+    border: 1px solid var(--border); 
+    background: var(--white); 
+}
+
+.btn-icon:hover { background: #f0f0f0; }
+
+/* Panels */
+.panel { 
+    background: #f8f9fa; 
+    border: 1px solid #e9ecef; 
+    padding: 20px; 
+    border-radius: 6px; 
+    margin-bottom: 20px; 
+}
+
+.panel-title {
+    font-size: 1em;
+    color: var(--primary);
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-light);
+}
+
+/* Forms */
+.form-row { 
+    display: flex; 
+    gap: 15px; 
+    margin-bottom: 15px; 
+    flex-wrap: wrap; 
+}
+
+.form-group { 
+    flex: 1; 
+    min-width: 250px; 
+}
+
+label { 
+    display: block; 
+    font-weight: bold; 
+    margin-bottom: 5px; 
+    font-size: 0.85em; 
+    color: #666; 
+    text-transform: uppercase; 
+    line-height: 1.4;
+}
+
+input[type="text"], textarea, select { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    font-size: 1em; 
+    font-family: 'Mulish', sans-serif; 
+    line-height: 1.6;
+}
+
+textarea { height: 100px; resize: vertical; }
+
+/* Rich Text Editor */
+.editor-toolbar {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    padding: 8px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.editor-btn {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 14px;
+    min-width: 32px;
+}
+
+.editor-btn:hover {
+    background: #e0e0e0;
+}
+
+.editor-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.editor-content {
+    border: 1px solid #ccc;
+    border-radius: 0 0 4px 4px;
+    padding: 15px;
+    min-height: 150px;
+    background: white;
+    line-height: 1.8;
+}
+
+.editor-content:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.editor-content ul, .editor-content ol {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+/* Tile Grid Preview */
+.tile-grid-preview { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; 
+}
+
+@media (max-width: 900px) { .tile-grid-preview { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .tile-grid-preview { grid-template-columns: 1fr; } }
+
+.tile-card { 
+    background: var(--white); 
+    border: 1px solid var(--border); 
+    border-radius: 6px; 
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+    position: relative; 
+    height: 450px;
+    transition: 0.2s;
+}
+
+.tile-card.editing { box-shadow: 0 0 0 3px var(--primary); }
+
+.tile-img { 
+    height: 140px; 
+    background-color: #eee; 
+    background-size: cover; 
+    background-position: top center; 
+    border-bottom: 1px solid #eee; 
+    flex-shrink: 0; 
+}
+
+.tile-body { 
+    padding: 15px; 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden; 
+    background: var(--primary-light);
+}
+
+.tile-title { 
+    font-weight: bold; 
+    color: var(--primary); 
+    margin-bottom: 10px; 
+    flex-shrink: 0; 
+    line-height: 1.4;
+}
+
+.tile-text { 
+    font-size: 0.85em; 
+    color: var(--text-light); 
+    flex-grow: 1; 
+    overflow-y: auto; 
+    padding-right: 5px;
+    line-height: 1.6;
+}
+
+.tile-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    z-index: 10;
+}
+
+.tile-btn {
+    background: var(--white);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.tile-btn:hover { transform: scale(1.1); }
+.tile-btn-edit { color: #2980b9; }
+.tile-btn-edit:hover { background: #2980b9; color: var(--white); }
+.tile-btn-del { color: var(--danger); }
+.tile-btn-del:hover { background: var(--danger); color: var(--white); }
+
+/* Table Preview */
+.table-preview { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: var(--white); 
+    font-size: 0.95em;
+    line-height: 1.8;
+}
+
+.table-preview thead th { 
+    text-align: left; 
+    background: var(--white); 
+    padding: 12px 10px; 
+    border-bottom: 3px solid var(--primary); 
+    color: var(--primary);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.table-preview thead th.col-center { text-align: center; }
+
+.table-preview tbody td { 
+    padding: 12px 10px; 
+    border-bottom: 1px solid #f1f5f9; 
+    vertical-align: middle; 
+}
+
+.table-preview tbody tr:hover { background: #fafafa; }
+.table-preview tbody tr.editing-row { background: #e8f4fc; }
+
+.table-preview .row-header td {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table-preview .cell-icon { text-align: center; font-size: 1.1em; }
+.table-preview .cell-actions { text-align: right; white-space: nowrap; }
+
+.c-yes { color: var(--success); font-weight: bold; }
+.c-no { color: #ccc; }
+
+/* Drag handle */
+.drag-handle {
+    cursor: grab;
+    padding: 0 10px;
+    color: #aaa;
+    user-select: none;
+}
+
+.drag-handle:hover { color: var(--primary); }
+.drag-handle:active { cursor: grabbing; }
+
+.dragging {
+    opacity: 0.5;
+    background: #fff3cd !important;
+}
+
+.drag-over {
+    border-top: 3px solid var(--primary) !important;
+}
+
+/* Teaser badge */
+.teaser-badge {
+    display: inline-block;
+    background: #e67e22;
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Teaser fields */
+.teaser-fields {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.teaser-fields-title {
+    font-size: 0.9em;
+    color: #e67e22;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+/* Settings panel */
+.settings-section {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.settings-section h3 {
+    color: var(--primary);
+    margin: 0 0 15px 0;
+    font-size: 1.1em;
+}
+
+.embed-code {
+    background: #1a202c;
+    color: #9ae6b4;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9em;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+/* Toast */
+#toast { 
+    visibility: hidden; 
+    min-width: 280px; 
+    margin-left: -140px; 
+    background-color: #333; 
+    color: var(--white); 
+    text-align: center; 
+    border-radius: 4px; 
+    padding: 16px; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 50%; 
+    bottom: 30px; 
+}
+
+#toast.show { 
+    visibility: visible; 
+    animation: fadein 0.5s, fadeout 0.5s 2.5s; 
+}
+
+@keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+@keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+/* Responsive */
+@media (max-width: 600px) {
+    header { padding: 15px; }
+    .tab-content { padding: 15px; }
+    .tab { padding: 10px 12px; font-size: 0.85em; }
+}
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="loginScreen" class="login-screen">
+    <div class="login-box">
+        <h1>🔐 Funnel Manager</h1>
+        <p>Voer het wachtwoord in om door te gaan</p>
+        <div id="loginError" class="login-error">Onjuist wachtwoord</div>
+        <input type="password" id="passwordInput" placeholder="Wachtwoord" onkeypress="if(event.key==='Enter')login()">
+        <button class="btn btn-primary" onclick="login()" style="width:100%;">Inloggen</button>
+    </div>
+</div>
+
+<!-- Main App -->
+<div id="appContainer" class="app-container">
+    <div class="container">
+        <header>
+            <h1>Infofrankrijk Funnel Manager</h1>
+            <div class="header-right">
+                <div class="version">v2.0</div>
+                <button class="btn-logout" onclick="logout()">Uitloggen</button>
+            </div>
+        </header>
+
+        <div id="statusBar" class="status-bar">
+            <span id="statusText">✅ Verbonden</span>
+            <span id="lastSaved" class="last-saved"></span>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('tiles')">🖼️ TEGELS</button>
+            <button class="tab" onclick="switchTab('table')">📊 TABEL</button>
+            <button class="tab" onclick="switchTab('settings')">⚙️ INSTELLINGEN</button>
+        </div>
+
+        <!-- TAB: TEGELS -->
+        <div id="tab-tiles" class="tab-content active">
+            <div class="panel">
+                <h3 class="panel-title" id="tilePanelTitle">➕ Nieuwe Tegel</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Titel</label>
+                        <input type="text" id="tileTitle" placeholder="Titel van de tegel">
+                    </div>
+                    <div class="form-group">
+                        <label>Afbeelding URL</label>
+                        <input type="text" id="tileImg" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tekst</label>
+                    <div class="editor-toolbar">
+                        <button class="editor-btn" onclick="execCmd('bold')" title="Vet"><b>B</b></button>
+                        <button class="editor-btn" onclick="execCmd('italic')" title="Cursief"><i>I</i></button>
+                        <button class="editor-btn" onclick="execCmd('underline')" title="Onderstrepen"><u>U</u></button>
+                        <button class="editor-btn" onclick="execCmd('insertUnorderedList')" title="Bullets">• ―</button>
+                        <button class="editor-btn" onclick="execCmd('insertOrderedList')" title="Nummering">1. ―</button>
+                    </div>
+                    <div class="editor-content" id="tileTextEditor" contenteditable="true"></div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button id="btnTileAdd" class="btn btn-primary" onclick="addTile()">+ Toevoegen</button>
+                    <button id="btnTileUpdate" class="btn btn-update" onclick="updateTile()">💾 Opslaan</button>
+                    <button id="btnTileCancel" class="btn btn-secondary" style="display:none;" onclick="cancelTileEdit()">Annuleren</button>
+                </div>
+            </div>
+            <div id="tileList" class="tile-grid-preview"></div>
+        </div>
+
+        <!-- TAB: TABEL -->
+        <div id="tab-table" class="tab-content">
+            <div class="panel">
+                <h3 class="panel-title" id="tablePanelTitle">➕ Nieuwe Rij</h3>
+                <div class="form-row">
+                    <div class="form-group" style="max-width:150px;">
+                        <label>Type</label>
+                        <select id="rowType">
+                            <option value="item">Item</option>
+                            <option value="header">Kop</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Naam</label>
+                        <input type="text" id="rowName" placeholder="Naam van het item">
+                    </div>
+                    <div class="form-group" id="linkGroup">
+                        <label>Link (optioneel)</label>
+                        <input type="text" id="rowLink" placeholder="https://...">
+                    </div>
+                </div>
+                <div id="checkboxRow" style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+                    <label style="display:flex; align-items:center; gap:5px; margin:0;">
+                        <input type="checkbox" id="visCheck" onchange="toggleTeaserFields()"> Bezoekers
+                    </label>
+                    <label style="display:flex; align-items:center; gap:5px; margin:0;">
+                        <input type="checkbox" id="subCheck" checked onchange="toggleTeaserFields()"> Abonnees
+                    </label>
+                </div>
+                
+                <!-- Teaser fields -->
+                <div id="teaserFields" class="teaser-fields" style="display:none;">
+                    <div class="teaser-fields-title">🎬 Teaser Modal (voor abonnee-only items)</div>
+                    <div class="form-group">
+                        <label>Teaser Tekst</label>
+                        <textarea id="rowTeaser" placeholder="Korte beschrijving wat dit instrument doet..." style="height:80px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>YouTube URL</label>
+                        <input type="text" id="rowYoutube" placeholder="https://www.youtube.com/watch?v=... of https://youtu.be/...">
+                    </div>
+                </div>
+                
+                <!-- Insert position -->
+                <div class="form-group" style="margin-top:15px;">
+                    <label>Invoegen na</label>
+                    <select id="insertAfter">
+                        <option value="-1">— Bovenaan —</option>
+                    </select>
+                </div>
+                
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button id="btnTableAdd" class="btn btn-primary" onclick="addTableRow()">+ Toevoegen</button>
+                    <button id="btnTableUpdate" class="btn btn-update" onclick="updateTableRow()">💾 Opslaan</button>
+                    <button id="btnTableCancel" class="btn btn-secondary" style="display:none;" onclick="cancelTableEdit()">Annuleren</button>
+                </div>
+            </div>
+            
+            <p style="color:#666; font-size:0.9em; margin-bottom:15px;">💡 Sleep rijen met ⋮⋮ om de volgorde te wijzigen</p>
+            
+            <table class="table-preview">
+                <thead>
+                    <tr>
+                        <th style="width:40px;"></th>
+                        <th>Dienst / Instrument</th>
+                        <th class="col-center" style="width:100px;">Bezoekers</th>
+                        <th class="col-center" style="width:100px;">Abonnees</th>
+                        <th style="width:80px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="tableList"></tbody>
+            </table>
+        </div>
+
+        <!-- TAB: SETTINGS -->
+        <div id="tab-settings" class="tab-content">
+            <div class="settings-section">
+                <h3>📦 Embed Codes</h3>
+                <p>Gebruik deze codes om de funnel te embedden op infofrankrijk.com:</p>
+                
+                <div style="margin-top:20px;">
+                    <label style="color:var(--primary);font-size:0.9em;">ALLES (Tegels + Tabel)</label>
+                    <div class="embed-code">&lt;iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed" width="100%" height="1600" frameborder="0"&gt;&lt;/iframe&gt;</div>
+                    <button class="btn btn-primary" onclick="copyCode('all')" style="margin-bottom:20px;">📋 Kopieer</button>
+                </div>
+                
+                <div>
+                    <label style="color:var(--primary);font-size:0.9em;">ALLEEN TEGELS</label>
+                    <div class="embed-code">&lt;iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed/tiles" width="100%" height="800" frameborder="0"&gt;&lt;/iframe&gt;</div>
+                    <button class="btn btn-primary" onclick="copyCode('tiles')" style="margin-bottom:20px;">📋 Kopieer</button>
+                </div>
+                
+                <div>
+                    <label style="color:var(--primary);font-size:0.9em;">ALLEEN TABEL</label>
+                    <div class="embed-code">&lt;iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed/table" width="100%" height="800" frameborder="0"&gt;&lt;/iframe&gt;</div>
+                    <button class="btn btn-primary" onclick="copyCode('table')">📋 Kopieer</button>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3>💾 Backup & Restore</h3>
+                <p>Download een backup van je data of herstel vanuit een eerdere versie.</p>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;">
+                    <button class="btn btn-secondary" onclick="downloadBackup()">⬇️ Download JSON</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">⬆️ Importeer JSON</button>
+                    <input type="file" id="importFile" accept=".json,.txt" style="display:none;" onchange="importBackup(event)">
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3>🔄 Automatische Backups</h3>
+                <p>De laatste 10 wijzigingen worden automatisch bewaard op de server.</p>
+                <div id="backupList" style="margin-top:15px;">Laden...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast">Melding</div>
+
+<script>
+/* ========================================
+   CONFIG & STATE
+======================================== */
+let authToken = localStorage.getItem('if_auth_token') || '';
+let appData = { tiles: [], table: [] };
+let editingTileIndex = -1;
+let editingTableIndex = -1;
+let saveTimeout = null;
+let draggedRow = null;
+
+/* ========================================
+   AUTH
+======================================== */
+async function login() {
+    const password = document.getElementById('passwordInput').value;
+    authToken = password;
+    
+    try {
+        const res = await fetch('/api/data', {
+            headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        
+        if (res.ok) {
+            localStorage.setItem('if_auth_token', authToken);
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').classList.add('active');
+            appData = await res.json();
+            init();
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+            document.getElementById('passwordInput').value = '';
+        }
+    } catch (e) {
+        document.getElementById('loginError').textContent = 'Verbindingsfout';
+        document.getElementById('loginError').style.display = 'block';
+    }
+}
+
+function logout() {
+    localStorage.removeItem('if_auth_token');
+    authToken = '';
+    location.reload();
+}
+
+async function checkAuth() {
+    if (!authToken) return false;
+    
+    try {
+        const res = await fetch('/api/data', {
+            headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        
+        if (res.ok) {
+            appData = await res.json();
+            return true;
+        }
+    } catch (e) {}
+    
+    return false;
+}
+
+/* ========================================
+   INIT
+======================================== */
+async function init() {
+    renderTiles();
+    renderTable();
+    updateInsertOptions();
+    toggleTeaserFields();
+    loadBackups();
+    updateStatus('saved');
+}
+
+// Check if already logged in
+(async function() {
+    if (await checkAuth()) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('appContainer').classList.add('active');
+        init();
+    }
+})();
+
+/* ========================================
+   API CALLS
+======================================== */
+async function saveData() {
+    updateStatus('saving');
+    
+    try {
+        const res = await fetch('/api/data', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + authToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: 'save', data: appData })
+        });
+        
+        if (res.ok) {
+            const result = await res.json();
+            updateStatus('saved', result.timestamp);
+        } else {
+            updateStatus('error');
+        }
+    } catch (e) {
+        updateStatus('error');
+    }
+}
+
+function queueSave() {
+    if (saveTimeout) clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(saveData, 1000);
+}
+
+function updateStatus(status, timestamp) {
+    const bar = document.getElementById('statusBar');
+    const text = document.getElementById('statusText');
+    const saved = document.getElementById('lastSaved');
+    
+    bar.className = 'status-bar';
+    
+    if (status === 'saving') {
+        bar.classList.add('saving');
+        text.textContent = '💾 Opslaan...';
+    } else if (status === 'error') {
+        bar.classList.add('error');
+        text.textContent = '❌ Fout bij opslaan';
+    } else {
+        text.textContent = '✅ Opgeslagen';
+        if (timestamp) {
+            const date = new Date(timestamp);
+            saved.textContent = 'Laatst opgeslagen: ' + date.toLocaleTimeString('nl-NL');
+        }
+    }
+}
+
+/* ========================================
+   TABS
+======================================== */
+function switchTab(id) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+}
+
+/* ========================================
+   RICH TEXT EDITOR
+======================================== */
+function execCmd(cmd) {
+    document.execCommand(cmd, false, null);
+    document.getElementById('tileTextEditor').focus();
+}
+
+/* ========================================
+   TEASER FIELDS TOGGLE
+======================================== */
+function toggleTeaserFields() {
+    const vis = document.getElementById('visCheck').checked;
+    const sub = document.getElementById('subCheck').checked;
+    const teaserFields = document.getElementById('teaserFields');
+    const linkGroup = document.getElementById('linkGroup');
+    
+    if (sub && !vis) {
+        teaserFields.style.display = 'block';
+        linkGroup.style.display = 'none';
+    } else {
+        teaserFields.style.display = 'none';
+        linkGroup.style.display = 'block';
+    }
+}
+
+/* ========================================
+   TILES
+======================================== */
+function addTile() {
+    const title = document.getElementById('tileTitle').value.trim();
+    if (!title) { alert('Titel is verplicht'); return; }
+    
+    appData.tiles.push({
+        title: title,
+        img: document.getElementById('tileImg').value.trim(),
+        text: document.getElementById('tileTextEditor').innerHTML
+    });
+    
+    clearTileForm();
+    renderTiles();
+    queueSave();
+    showToast('✅ Tegel toegevoegd');
+}
+
+function editTile(idx) {
+    editingTileIndex = idx;
+    const tile = appData.tiles[idx];
+    
+    document.getElementById('tileTitle').value = tile.title;
+    document.getElementById('tileImg').value = tile.img || '';
+    document.getElementById('tileTextEditor').innerHTML = tile.text || '';
+    
+    document.getElementById('tilePanelTitle').textContent = '✏️ Tegel Bewerken';
+    document.getElementById('btnTileAdd').style.display = 'none';
+    document.getElementById('btnTileUpdate').style.display = 'inline-flex';
+    document.getElementById('btnTileCancel').style.display = 'inline-flex';
+    
+    renderTiles();
+    document.querySelector('#tab-tiles .panel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateTile() {
+    if (editingTileIndex < 0) return;
+    
+    appData.tiles[editingTileIndex] = {
+        title: document.getElementById('tileTitle').value.trim(),
+        img: document.getElementById('tileImg').value.trim(),
+        text: document.getElementById('tileTextEditor').innerHTML
+    };
+    
+    cancelTileEdit();
+    renderTiles();
+    queueSave();
+    showToast('✅ Tegel aangepast');
+}
+
+function cancelTileEdit() {
+    editingTileIndex = -1;
+    clearTileForm();
+    document.getElementById('tilePanelTitle').textContent = '➕ Nieuwe Tegel';
+    document.getElementById('btnTileAdd').style.display = 'inline-flex';
+    document.getElementById('btnTileUpdate').style.display = 'none';
+    document.getElementById('btnTileCancel').style.display = 'none';
+    renderTiles();
+}
+
+function clearTileForm() {
+    document.getElementById('tileTitle').value = '';
+    document.getElementById('tileImg').value = '';
+    document.getElementById('tileTextEditor').innerHTML = '';
+}
+
+function deleteTile(idx) {
+    if (confirm('Tegel verwijderen?')) {
+        appData.tiles.splice(idx, 1);
+        if (editingTileIndex === idx) cancelTileEdit();
+        renderTiles();
+        queueSave();
+        showToast('🗑️ Tegel verwijderd');
+    }
+}
+
+function renderTiles() {
+    const container = document.getElementById('tileList');
+    
+    if (appData.tiles.length === 0) {
+        container.innerHTML = '<p style="color:#666; grid-column:1/-1;">Nog geen tegels.</p>';
+        return;
+    }
+    
+    container.innerHTML = appData.tiles.map((t, i) => `
+        <div class="tile-card ${editingTileIndex === i ? 'editing' : ''}">
+            <div class="tile-actions">
+                <button class="tile-btn tile-btn-edit" onclick="editTile(${i})" title="Bewerken">✏️</button>
+                <button class="tile-btn tile-btn-del" onclick="deleteTile(${i})" title="Verwijderen">×</button>
+            </div>
+            <div class="tile-img" style="background-image:url('${t.img || ''}')"></div>
+            <div class="tile-body">
+                <div class="tile-title">${t.title}</div>
+                <div class="tile-text">${t.text || ''}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+/* ========================================
+   TABLE
+======================================== */
+function addTableRow() {
+    const name = document.getElementById('rowName').value.trim();
+    if (!name) { alert('Naam is verplicht'); return; }
+    
+    const newRow = getTableFormData();
+    const insertAfter = parseInt(document.getElementById('insertAfter').value);
+    
+    if (insertAfter === -1) {
+        appData.table.unshift(newRow);
+    } else {
+        appData.table.splice(insertAfter + 1, 0, newRow);
+    }
+    
+    clearTableForm();
+    renderTable();
+    updateInsertOptions();
+    queueSave();
+    showToast('✅ Rij toegevoegd');
+}
+
+function editRow(idx) {
+    editingTableIndex = idx;
+    const row = appData.table[idx];
+    
+    document.getElementById('rowType').value = row.type;
+    document.getElementById('rowName').value = row.name;
+    document.getElementById('rowLink').value = row.link || '';
+    document.getElementById('visCheck').checked = row.vis || false;
+    document.getElementById('subCheck').checked = row.sub !== false;
+    document.getElementById('rowTeaser').value = row.teaser || '';
+    document.getElementById('rowYoutube').value = row.youtube || '';
+    
+    toggleTeaserFields();
+    
+    document.getElementById('tablePanelTitle').textContent = '✏️ Rij Bewerken';
+    document.getElementById('btnTableAdd').style.display = 'none';
+    document.getElementById('btnTableUpdate').style.display = 'inline-flex';
+    document.getElementById('btnTableCancel').style.display = 'inline-flex';
+    
+    renderTable();
+    document.querySelector('#tab-table .panel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateTableRow() {
+    if (editingTableIndex < 0) return;
+    
+    appData.table[editingTableIndex] = getTableFormData();
+    cancelTableEdit();
+    renderTable();
+    updateInsertOptions();
+    queueSave();
+    showToast('✅ Rij aangepast');
+}
+
+function cancelTableEdit() {
+    editingTableIndex = -1;
+    clearTableForm();
+    document.getElementById('tablePanelTitle').textContent = '➕ Nieuwe Rij';
+    document.getElementById('btnTableAdd').style.display = 'inline-flex';
+    document.getElementById('btnTableUpdate').style.display = 'none';
+    document.getElementById('btnTableCancel').style.display = 'none';
+    renderTable();
+}
+
+function getTableFormData() {
+    const vis = document.getElementById('visCheck').checked;
+    const sub = document.getElementById('subCheck').checked;
+    
+    const data = {
+        type: document.getElementById('rowType').value,
+        name: document.getElementById('rowName').value.trim(),
+        link: document.getElementById('rowLink').value.trim(),
+        vis: vis,
+        sub: sub
+    };
+    
+    if (sub && !vis) {
+        data.teaser = document.getElementById('rowTeaser').value.trim();
+        data.youtube = document.getElementById('rowYoutube').value.trim();
+    }
+    
+    return data;
+}
+
+function clearTableForm() {
+    document.getElementById('rowType').value = 'item';
+    document.getElementById('rowName').value = '';
+    document.getElementById('rowLink').value = '';
+    document.getElementById('visCheck').checked = false;
+    document.getElementById('subCheck').checked = true;
+    document.getElementById('rowTeaser').value = '';
+    document.getElementById('rowYoutube').value = '';
+    toggleTeaserFields();
+}
+
+function deleteRow(idx) {
+    if (confirm('Rij verwijderen?')) {
+        appData.table.splice(idx, 1);
+        if (editingTableIndex === idx) cancelTableEdit();
+        renderTable();
+        updateInsertOptions();
+        queueSave();
+        showToast('🗑️ Rij verwijderd');
+    }
+}
+
+function updateInsertOptions() {
+    const select = document.getElementById('insertAfter');
+    select.innerHTML = '<option value="-1">— Bovenaan —</option>';
+    
+    appData.table.forEach((row, idx) => {
+        const prefix = row.type === 'header' ? '📁 ' : '    ';
+        select.innerHTML += `<option value="${idx}">${prefix}${row.name}</option>`;
+    });
+}
+
+function renderTable() {
+    const container = document.getElementById('tableList');
+    
+    if (appData.table.length === 0) {
+        container.innerHTML = '<tr><td colspan="5" style="color:#666; padding:20px;">Nog geen rijen.</td></tr>';
+        return;
+    }
+    
+    container.innerHTML = appData.table.map((r, i) => {
+        const dragAttr = `draggable="true" ondragstart="dragStart(event, ${i})" ondragover="dragOver(event)" ondrop="drop(event, ${i})" ondragend="dragEnd()"`;
+        
+        if (r.type === 'header') {
+            return `<tr class="row-header ${editingTableIndex === i ? 'editing-row' : ''}" ${dragAttr} data-index="${i}">
+                <td class="drag-handle">⋮⋮</td>
+                <td colspan="3">📁 ${r.name}</td>
+                <td class="cell-actions">
+                    <button class="btn-icon" onclick="editRow(${i})">✏️</button>
+                    <button class="btn-icon" onclick="deleteRow(${i})" style="color:var(--danger);">✖</button>
+                </td>
+            </tr>`;
+        }
+        
+        const isSubOnly = r.sub && !r.vis;
+        const hasTeaser = isSubOnly && (r.teaser || r.youtube);
+        const teaserBadge = hasTeaser ? '<span class="teaser-badge">TEASER</span>' : '';
+        const linkIcon = r.link && !isSubOnly ? ` <a href="${r.link}" target="_blank" style="color:var(--primary);">🔗</a>` : '';
+        
+        return `<tr class="${editingTableIndex === i ? 'editing-row' : ''}" ${dragAttr} data-index="${i}">
+            <td class="drag-handle">⋮⋮</td>
+            <td>${r.name}${linkIcon}${teaserBadge}</td>
+            <td class="cell-icon">${r.vis ? '<span class="c-yes">✔</span>' : '<span class="c-no">✘</span>'}</td>
+            <td class="cell-icon">${r.sub ? '<span class="c-yes">✔</span>' : '<span class="c-no">✘</span>'}</td>
+            <td class="cell-actions">
+                <button class="btn-icon" onclick="editRow(${i})">✏️</button>
+                <button class="btn-icon" onclick="deleteRow(${i})" style="color:var(--danger);">✖</button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+/* ========================================
+   DRAG & DROP
+======================================== */
+function dragStart(e, idx) {
+    draggedRow = idx;
+    e.target.closest('tr').classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function dragOver(e) {
+    e.preventDefault();
+    const tr = e.target.closest('tr');
+    if (tr) {
+        document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+        tr.classList.add('drag-over');
+    }
+}
+
+function drop(e, targetIdx) {
+    e.preventDefault();
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    
+    if (draggedRow === null || draggedRow === targetIdx) return;
+    
+    const item = appData.table.splice(draggedRow, 1)[0];
+    const newIdx = targetIdx > draggedRow ? targetIdx : targetIdx;
+    appData.table.splice(newIdx, 0, item);
+    
+    renderTable();
+    updateInsertOptions();
+    queueSave();
+}
+
+function dragEnd() {
+    draggedRow = null;
+    document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+}
+
+/* ========================================
+   SETTINGS
+======================================== */
+function copyCode(type) {
+    const codes = {
+        all: '<iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed" width="100%" height="1600" frameborder="0"></iframe>',
+        tiles: '<iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed/tiles" width="100%" height="800" frameborder="0"></iframe>',
+        table: '<iframe src="https://if-funnel-en-tabel-generator.vercel.app/embed/table" width="100%" height="800" frameborder="0"></iframe>'
+    };
+    navigator.clipboard.writeText(codes[type]);
+    showToast('📋 Embed code gekopieerd');
+}
+
+function downloadBackup() {
+    const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `funnel-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('⬇️ Backup gedownload');
+}
+
+function importBackup(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+        try {
+            const data = JSON.parse(ev.target.result);
+            if (!data.tiles || !data.table) {
+                throw new Error('Invalid format');
+            }
+            
+            if (confirm('Data importeren? Dit overschrijft de huidige data.')) {
+                appData = data;
+                renderTiles();
+                renderTable();
+                updateInsertOptions();
+                await saveData();
+                showToast('✅ Data geïmporteerd');
+            }
+        } catch (err) {
+            alert('Ongeldig bestand: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+}
+
+async function loadBackups() {
+    const container = document.getElementById('backupList');
+    
+    try {
+        const res = await fetch('/api/data?action=backups', {
+            headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        
+        if (res.ok) {
+            const { backups } = await res.json();
+            
+            if (backups.length === 0) {
+                container.innerHTML = '<p style="color:#666;">Nog geen backups.</p>';
+                return;
+            }
+            
+            container.innerHTML = backups.map(b => {
+                const date = b.date.replace(/-/g, ' ').replace('T', ' ');
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;">
+                    <span>${date}</span>
+                    <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.85em;" onclick="restoreBackup('${b.key}')">Herstel</button>
+                </div>`;
+            }).join('');
+        }
+    } catch (e) {
+        container.innerHTML = '<p style="color:var(--danger);">Kon backups niet laden.</p>';
+    }
+}
+
+async function restoreBackup(key) {
+    if (!confirm('Weet je zeker dat je deze backup wilt herstellen?')) return;
+    
+    try {
+        const res = await fetch('/api/data?action=restore&key=' + encodeURIComponent(key), {
+            headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        
+        if (res.ok) {
+            appData = await res.json();
+            renderTiles();
+            renderTable();
+            updateInsertOptions();
+            await saveData();
+            showToast('✅ Backup hersteld');
+        }
+    } catch (e) {
+        alert('Fout bij herstellen');
+    }
+}
+
+/* ========================================
+   TOAST
+======================================== */
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'show';
+    setTimeout(() => { toast.className = ''; }, 3000);
+}
+</script>
+</body>
+</html>
