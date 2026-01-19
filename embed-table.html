@@ -511,5 +511,14 @@ document.addEventListener('keydown', e => {
 
 loadData();
 </script>
+    <script>
+// Auto-resize: stuur hoogte naar parent
+function sendHeight() {
+    const height = document.body.scrollHeight + 20;
+    window.parent.postMessage({ type: 'if-resize', id: 'table', height: height }, '*');
+}
+window.addEventListener('load', () => setTimeout(sendHeight, 500));
+new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true });
+</script>
 </body>
 </html>
