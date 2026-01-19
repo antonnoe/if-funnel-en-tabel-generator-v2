@@ -151,7 +151,3 @@ export async function POST(request) {
     return Response.json({ error: 'Server error: ' + error.message }, { status: 500 });
   }
 }
-
-export const config = {
-  runtime: 'edge',
-};
