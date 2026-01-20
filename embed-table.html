@@ -26,7 +26,7 @@ body {
     background: transparent;
 }
 
-h1, h2, h3, .if-btn, th { font-family: 'Poppins', sans-serif; }
+h1, h2, h3, .if-btn, th, .if-th-accordion { font-family: 'Poppins', sans-serif; }
 
 .if-container {
     max-width: 900px;
@@ -75,7 +75,6 @@ h1, h2, h3, .if-btn, th { font-family: 'Poppins', sans-serif; }
     font-size: 14px;
     letter-spacing: 0.5px;
     padding: 15px 10px !important;
-    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     user-select: none;
     transition: background 0.2s;
@@ -313,6 +312,49 @@ h1, h2, h3, .if-btn, th { font-family: 'Poppins', sans-serif; }
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* Mobile optimalisatie */
+@media (max-width: 600px) {
+    .if-tbl {
+        font-size: 13px;
+        line-height: 1.8;
+    }
+    .if-tbl th,
+    .if-tbl td {
+        padding: 8px 5px;
+        font-family: 'Mulish', sans-serif;
+    }
+    .if-tbl th {
+        font-size: 12px;
+        font-family: 'Poppins', sans-serif;
+        color: #800000;
+    }
+    .if-tbl th:not(.tl),
+    .if-icon {
+        width: 60px;
+    }
+    .if-container {
+        padding: 10px;
+    }
+    .if-btn {
+        padding: 12px 20px;
+        font-size: 16px;
+        font-family: 'Poppins', sans-serif;
+        background: #800000;
+    }
+    .if-th-accordion td {
+        font-size: 12px;
+        font-family: 'Poppins', sans-serif;
+        color: #800000;
+    }
+    .if-accordion-icon {
+        width: 16px;
+        height: 16px;
+        font-size: 11px;
+        line-height: 16px;
+        background: #800000;
+    }
+}
 </style>
 </head>
 <body>
@@ -321,7 +363,6 @@ h1, h2, h3, .if-btn, th { font-family: 'Poppins', sans-serif; }
     <div id="content" class="if-loading">Laden...</div>
 </div>
 
-<!-- Modal -->
 <div class="if-modal-overlay" id="modalOverlay" onclick="closeModal(event)">
     <div class="if-modal" onclick="event.stopPropagation()">
         <button class="if-modal-close" onclick="closeModal()">&times;</button>
@@ -387,7 +428,6 @@ function render(appData) {
                 <tbody>
     `;
     
-    // Group items by headers
     let sections = [];
     let currentSection = null;
     
@@ -401,7 +441,6 @@ function render(appData) {
     });
     if (currentSection) sections.push(currentSection);
     
-    // Render sections with accordions
     sections.forEach((section, sIdx) => {
         html += `
             <tr class="if-th-accordion open" onclick="toggleSection('${section.id}')" id="header-${section.id}">
@@ -449,7 +488,6 @@ function render(appData) {
         html += `</tbody>`;
     });
     
-    // Cost row
     html += `
             <tr class="if-cost-row">
                 <td>KOSTEN</td>
@@ -461,7 +499,7 @@ function render(appData) {
         </div>
         
         <div class="if-cta">
-                        <a href="https://infofrankrijk.com/registreren/" class="if-btn" target="_blank">Word abonnee, meld je aan</a>
+            <a href="https://infofrankrijk.com/registreren/" class="if-btn" target="_blank">Word abonnee, meld je aan</a>
         </div>
     `;
     
@@ -510,17 +548,7 @@ document.addEventListener('keydown', e => {
 });
 
 loadData();
-</script>
-    <script>
-// Auto-resize: stuur hoogte naar parent
-function sendHeight() {
-    const height = document.body.scrollHeight + 20;
-    window.parent.postMessage({ type: 'if-resize', id: 'table', height: height }, '*');
-}
-window.addEventListener('load', () => setTimeout(sendHeight, 500));
-new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true });
-</script>
-    <script>
+
 // Auto-resize: stuur hoogte naar parent
 function sendHeight() {
     const height = document.body.scrollHeight + 20;
